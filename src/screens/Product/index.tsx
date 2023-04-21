@@ -15,6 +15,9 @@ import {
 } from './styles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import * as ImagePicker from 'expo-image-picker'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { firestore, storage } from '../../../firebaseConfig'
+import { addDoc, collection } from 'firebase/firestore'
 
 import { ButtonBack } from '@components/ButtonBack'
 import { Photo } from '@components/Photo'
@@ -64,6 +67,40 @@ export function Product() {
         'Cadastro',
         'Informe o preço de todos os tamanhos da pizza.'
       )
+    }
+
+    setIsLoading(true)
+
+    const fileName = new Date().getTime()
+    const reference = ref(storage, `pizzas/${fileName}.png`)
+
+    const response = await fetch(image)
+    const blob = await response.blob()
+    await uploadBytes(reference, blob)
+
+    const photo_url = await getDownloadURL(reference)
+
+    try {
+      const docRef = await addDoc(collection(firestore, 'pizzas'), {
+        name,
+        name_insensitive: name.toLowerCase().trim(),
+        description,
+        price_sizes: {
+          p: priceSizeP,
+          m: priceSizeM,
+          g: priceSizeG,
+        },
+        photo_url,
+        photo_path: reference.fullPath,
+      })
+
+      if (docRef.id) {
+        return Alert.alert('Cadastro', 'Pizza cadastrada com sucesso.')
+      }
+    } catch (error) {
+      return Alert.alert('Cadastro', 'Não foi possível cadastrar a pizza.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
