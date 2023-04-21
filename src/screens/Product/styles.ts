@@ -1,5 +1,5 @@
+import { Button } from '@components/Button'
 import { LinearGradient } from 'expo-linear-gradient'
-import { StatusBarStyle, setStatusBarStyle } from 'expo-status-bar'
 import styled, { css } from 'styled-components/native'
 
 export const Container = styled.KeyboardAvoidingView`
@@ -34,4 +34,17 @@ export const DeleteLabel = styled.Text`
     font-family: ${theme.FONTS.TEXT};
     color: ${theme.COLORS.TITLE};
   `}
+`
+
+export const Upload = styled.View`
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 32px 0;
+`
+
+export const PickImageButton = styled(Button)`
+  max-width: 90px;
+  margin-left: 32px;
 `

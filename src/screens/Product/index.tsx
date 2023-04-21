@@ -1,5 +1,12 @@
 import { Platform } from 'react-native'
-import { Container, DeleteLabel, Header, Title } from './styles'
+import {
+  Container,
+  DeleteLabel,
+  Header,
+  PickImageButton,
+  Title,
+  Upload,
+} from './styles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import { ButtonBack } from '@components/ButtonBack'
@@ -18,7 +25,11 @@ export function Product() {
         </TouchableOpacity>
       </Header>
 
-      <Photo uri="" />
+      <Upload>
+        <Photo uri="" />
+
+        <PickImageButton title="Carregar" type="secondary" />
+      </Upload>
     </Container>
   )
 }
