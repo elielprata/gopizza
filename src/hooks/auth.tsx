@@ -1,8 +1,20 @@
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, doc, documentId, getDoc, where } from 'firebase/firestore'
+import {
+  getAuth,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut as signOutFB,
+} from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import { firestore } from '../../firebaseConfig'
-import { ReactNode, createContext, useContext, useState } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { Alert } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type User = {
   id: string
@@ -12,6 +24,8 @@ type User = {
 
 type AuthContextData = {
   signIn: (email: string, password: string) => Promise<void>
+  signOut: () => Promise<void>
+  forgotPassword: (email: string) => Promise<void>
   isLogging: boolean
   user: User | null
 }
@@ -20,11 +34,15 @@ type AuthProviderProps = {
   children: ReactNode
 }
 
+const USER_COLLECTION = '@gopizza:user'
+
 export const AuthContext = createContext({} as AuthContextData)
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [isLogging, setIsLogging] = useState(false)
+
+  const auth = getAuth()
 
   async function signIn(email: string, password: string) {
     if (!email || !password) {
@@ -32,8 +50,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     setIsLogging(true)
-
-    const auth = getAuth()
 
     signInWithEmailAndPassword(auth, email, password)
       .then(async (account) => {
@@ -49,6 +65,7 @@ function AuthProvider({ children }: AuthProviderProps) {
             isAdmin,
           }
 
+          await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify(userData))
           setUser(userData)
         } else {
           return Alert.alert(
@@ -69,8 +86,54 @@ function AuthProvider({ children }: AuthProviderProps) {
       .finally(() => setIsLogging(false))
   }
 
+  async function loadUserStorageData() {
+    setIsLogging(true)
+
+    const storedUser = await AsyncStorage.getItem(USER_COLLECTION)
+
+    if (storedUser) {
+      const userData = JSON.parse(storedUser) as User
+
+      setUser(userData)
+    }
+
+    setIsLogging(false)
+  }
+
+  async function signOut() {
+    await signOutFB(auth)
+    await AsyncStorage.removeItem(USER_COLLECTION)
+    setUser(null)
+  }
+
+  async function forgotPassword(email: string) {
+    if (!email) {
+      return Alert.alert('Redefinir senha', 'Informe o e-mail.')
+    }
+
+    sendPasswordResetEmail(auth, email)
+      .then(() =>
+        Alert.alert(
+          'Redefinir senha',
+          'Enviamos um link no seu e-mail para redefinir sua senha.'
+        )
+      )
+      .catch(() =>
+        Alert.alert(
+          'Redefinir senha',
+          'Não foi possível enviar o e-mail para redefinir sua senha.'
+        )
+      )
+  }
+
+  useEffect(() => {
+    loadUserStorageData()
+  }, [])
+
   return (
-    <AuthContext.Provider value={{ signIn, isLogging, user }}>
+    <AuthContext.Provider
+      value={{ signIn, signOut, forgotPassword, isLogging, user }}
+    >
       {children}
     </AuthContext.Provider>
   )
