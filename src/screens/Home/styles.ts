@@ -14,7 +14,7 @@ export const Header = styled(LinearGradient).attrs(({ theme }) => ({
   align-items: center;
   justify-content: space-between;
 
-  padding: 53px 20px 24px;
+  padding: 63px 24px 58px;
 `
 
 export const Greeting = styled.View`
