@@ -14,6 +14,7 @@ import { useTheme } from 'styled-components/native'
 
 import HappyEmojiPng from '../../assets/happy.png'
 import { Search } from '@components/Search'
+import { ProductCard } from '@components/ProductCard'
 
 export function Home() {
   const { COLORS } = useTheme()
@@ -37,6 +38,15 @@ export function Home() {
         <MenuTitle>Cardápio</MenuTitle>
         <MenuItemsNumber>10 pizzas</MenuItemsNumber>
       </MenuHeader>
+
+      <ProductCard
+        data={{
+          photo_url: 'https://github.com/elielprata.png',
+          name: 'Marguerita',
+          description: 'asasdf',
+          id: 'aasdf',
+        }}
+      />
     </Container>
   )
 }
