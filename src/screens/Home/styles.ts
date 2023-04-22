@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components/native'
 import { LinearGradient } from 'expo-linear-gradient'
+import { Button } from '@components/Button'
 
 export const Container = styled.KeyboardAvoidingView`
   flex: 1;
@@ -64,4 +65,9 @@ export const MenuTitle = styled.Text`
     font-family: ${theme.FONTS.TITLE};
     color: ${theme.COLORS.SECONDARY_900};
   `}
+`
+
+export const NewProductButton = styled(Button)`
+  margin: 0 24px;
+  margin-bottom: 12px;
 `

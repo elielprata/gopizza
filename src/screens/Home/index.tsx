@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react'
 import {
   Container,
   Greeting,
@@ -7,6 +8,7 @@ import {
   MenuHeader,
   MenuItemsNumber,
   MenuTitle,
+  NewProductButton,
 } from './styles'
 import { MaterialIcons } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native'
@@ -20,13 +22,12 @@ import {
   startAt,
 } from 'firebase/firestore'
 import { firestore } from '../../../firebaseConfig'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 
 import HappyEmojiPng from '../../assets/happy.png'
 
 import { Search } from '@components/Search'
 import { ProductCard, ProductProps } from '@components/ProductCard'
-import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 
 export function Home() {
@@ -71,9 +72,15 @@ export function Home() {
     navigation.navigate('product', { id })
   }
 
-  useEffect(() => {
-    fetchPizzas('')
-  }, [])
+  function handleAdd() {
+    navigation.navigate('product', {})
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPizzas('')
+    }, [])
+  )
 
   return (
     <Container>
@@ -112,6 +119,12 @@ export function Home() {
           paddingBottom: 125,
           marginHorizontal: 24,
         }}
+      />
+
+      <NewProductButton
+        title="Cadastrar Pizza"
+        type="secondary"
+        onPress={handleAdd}
       />
     </Container>
   )
