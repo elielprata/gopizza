@@ -21,7 +21,10 @@ export const InputArea = styled.View`
   `}
 `
 
-export const Input = styled(TextInput)`
+export const Input = styled(TextInput).attrs(({ theme }) => ({
+  placeholder: 'pesquisar...',
+  placeholderTextColor: theme.COLORS.SHAPE,
+}))`
   flex: 1;
   height: 52px;
   padding-left: 12px;

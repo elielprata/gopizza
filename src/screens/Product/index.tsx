@@ -119,12 +119,11 @@ export function Product() {
       })
 
       if (docRef.id) {
-        return Alert.alert('Cadastro', 'Pizza cadastrada com sucesso.')
+        navigation.navigate('home')
       }
     } catch (error) {
-      return Alert.alert('Cadastro', 'Não foi possível cadastrar a pizza.')
-    } finally {
       setIsLoading(false)
+      return Alert.alert('Cadastro', 'Não foi possível cadastrar a pizza.')
     }
   }
 
@@ -200,7 +199,9 @@ export function Product() {
           <InputGroup>
             <InputGroupHeader>
               <Label>Descrição</Label>
-              <MaxCharacters>0 de 60 Caracteres</MaxCharacters>
+              <MaxCharacters>
+                {description.length} de 60 Caracteres
+              </MaxCharacters>
             </InputGroupHeader>
 
             <Input
