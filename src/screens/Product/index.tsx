@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Alert, Platform, ScrollView } from 'react-native'
 import {
   Container,
@@ -17,7 +17,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { firestore, storage } from '../../../firebaseConfig'
-import { addDoc, collection } from 'firebase/firestore'
+import { doc, addDoc, collection, getDoc } from 'firebase/firestore'
 
 import { ProductNavigationProps } from '../../@types/navigation'
 
@@ -28,6 +28,17 @@ import { Input } from '@components/Input'
 import { Button } from '@components/Button'
 import { useRoute } from '@react-navigation/native'
 
+import { ProductProps } from '@components/ProductCard'
+
+type PizzaResponse = ProductProps & {
+  photo_path: string
+  price_sizes: {
+    p: string
+    m: string
+    g: string
+  }
+}
+
 export function Product() {
   const [image, setImage] = useState('')
   const [name, setName] = useState('')
@@ -36,6 +47,7 @@ export function Product() {
   const [priceSizeM, setPriceSizeM] = useState('')
   const [priceSizeG, setPriceSizeG] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [photoPath, setPhotoPath] = useState('')
 
   const route = useRoute()
   const { id } = route.params as ProductNavigationProps
@@ -109,6 +121,30 @@ export function Product() {
       setIsLoading(false)
     }
   }
+
+  async function getPizza() {
+    if (id) {
+      const ref = doc(firestore, 'pizzas', id)
+      const pizza = await getDoc(ref)
+
+      if (pizza.exists()) {
+        const { name, description, photo_url, price_sizes, photo_path } =
+          pizza.data() as PizzaResponse
+
+        setName(name)
+        setDescription(description)
+        setImage(photo_url)
+        setPriceSizeP(price_sizes.p)
+        setPriceSizeM(price_sizes.m)
+        setPriceSizeG(price_sizes.g)
+        setPhotoPath(photo_path)
+      }
+    }
+  }
+
+  useEffect(() => {
+    getPizza()
+  }, [id])
 
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
