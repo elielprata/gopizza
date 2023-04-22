@@ -4,6 +4,9 @@ import {
   GreetingEmoji,
   GreetingText,
   Header,
+  MenuHeader,
+  MenuItemsNumber,
+  MenuTitle,
 } from './styles'
 import { MaterialIcons } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native'
@@ -29,6 +32,11 @@ export function Home() {
       </Header>
 
       <Search onSearch={() => {}} onClear={() => {}} />
+
+      <MenuHeader>
+        <MenuTitle>Cardápio</MenuTitle>
+        <MenuItemsNumber>10 pizzas</MenuItemsNumber>
+      </MenuHeader>
     </Container>
   )
 }
