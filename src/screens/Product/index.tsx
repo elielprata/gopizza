@@ -19,11 +19,14 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { firestore, storage } from '../../../firebaseConfig'
 import { addDoc, collection } from 'firebase/firestore'
 
+import { ProductNavigationProps } from '../../@types/navigation'
+
 import { ButtonBack } from '@components/ButtonBack'
 import { Photo } from '@components/Photo'
 import { InputPrice } from '@components/InputPrice'
 import { Input } from '@components/Input'
 import { Button } from '@components/Button'
+import { useRoute } from '@react-navigation/native'
 
 export function Product() {
   const [image, setImage] = useState('')
@@ -33,6 +36,9 @@ export function Product() {
   const [priceSizeM, setPriceSizeM] = useState('')
   const [priceSizeG, setPriceSizeG] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  const route = useRoute()
+  const { id } = route.params as ProductNavigationProps
 
   async function handlePickerImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()

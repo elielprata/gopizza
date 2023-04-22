@@ -20,6 +20,7 @@ import {
   startAt,
 } from 'firebase/firestore'
 import { firestore } from '../../../firebaseConfig'
+import { useNavigation } from '@react-navigation/native'
 
 import HappyEmojiPng from '../../assets/happy.png'
 
@@ -33,6 +34,7 @@ export function Home() {
   const [search, setSearch] = useState('')
 
   const { COLORS } = useTheme()
+  const navigation = useNavigation()
 
   async function fetchPizzas(value: string) {
     const formatedValue = value.toLowerCase().trim()
@@ -63,6 +65,10 @@ export function Home() {
   function handleSearchClear() {
     setSearch('')
     fetchPizzas('')
+  }
+
+  function handleOpen(id: string) {
+    navigation.navigate('product', { id })
   }
 
   useEffect(() => {
@@ -97,7 +103,9 @@ export function Home() {
       <FlatList
         data={pizzas}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ProductCard data={item} />}
+        renderItem={({ item }) => (
+          <ProductCard data={item} onPress={() => handleOpen(item.id)} />
+        )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingTop: 20,
