@@ -7,10 +7,14 @@ export const Container = styled.KeyboardAvoidingView`
 export const Header = styled(LinearGradient).attrs(({ theme }) => ({
   colors: theme.COLORS.GRADIENT,
 }))`
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-
   padding: 53px 20px 24px;
+`
+
+export const Photo = styled.Image`
+  width: 240px;
+  height: 240px;
+  border-radius: 120px;
+  align-self: center;
+  position: relative;
+  top: -120px;
 `
