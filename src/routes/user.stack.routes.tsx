@@ -15,7 +15,7 @@ export function UserStackRoutes() {
     <Navigator screenOptions={{ headerShown: false }}>
       {user?.isAdmin ? (
         <Group>
-          <Screen name="home" component={Home} />
+          <Screen name="home" component={UserTabRoutes} />
 
           <Screen name="product" component={Product} />
         </Group>
