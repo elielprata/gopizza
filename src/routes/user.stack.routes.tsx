@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Home } from '@screens/Home'
 import { Product } from '@screens/Product'
 import { UserTabRoutes } from './user.tab.routes'
+import { Order } from '@screens/Order'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
@@ -22,7 +23,7 @@ export function UserStackRoutes() {
         <Group>
           <Screen name="home" component={UserTabRoutes} />
 
-          <Screen name="product" component={Product} />
+          <Screen name="order" component={Order} />
         </Group>
       )}
     </Navigator>
